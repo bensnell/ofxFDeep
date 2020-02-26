@@ -1,93 +1,67 @@
 #include "ofApp.h"
 
-
 //--------------------------------------------------------------
-void ofApp::setup() {
+void ofApp::setup(){
 
-	ofSetFrameRate(120);
+	model = std::make_unique<fdeep::model>(fdeep::load_model(ofToDataPath("assets/models/fldc_pi_38_1550_fdeep_model.json")));
 
-	// Setup params 
-	RUI_SETUP();
-	tracker.setupParams();
-	ctool.setupParams();
-	RUI_LOAD_FROM_XML();
+	/////// SINGLE ////////
 
-	// Setup the tracker 
-	tracker.setup();
-	tracker.start();
+	cout << "Testing predict()..." << endl;
+	for (int i = 0; i < 20; i++) {
 
-	// Setup the calibration tool
-	ctool.loadTargetPlan("targets.plan");
+		uint64_t startTime = ofGetElapsedTimeMicros();
+		const auto result = model->predict(
+			{ fdeep::tensor(fdeep::tensor_shape(128, 1),  {1, -1, 1,-1,-1,-1, 1, 1,-1,-1, 1,-1, 1,-1,-1, 1,-1, 1, 1,-1,-1, 1,-1,-1,-1, 1,-1, 1,-1,-1, 1,-1, 1,-1,-1,-1,-1, 1, 1,-1,-1,-1,-1, 1, 1, 1, 1,-1, 1,-1,-1,-1, 1, 1, 1, 1, 1, 1,-1, 1, 1,-1, 1,-1, 1,-1,-1,-1,-1, 1,-1,-1,-1,-1, 1,-1, 1, 1,-1, 1,-1, 1,-1,-1,-1, 1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1, 1,-1,-1,-1, 1,-1, 1,-1,-1, 1,-1,-1, 1,-1, 1,-1, 1,-1,-1,-1, 1,-1, 1,-1, 1, 1, 1, 1,-1,-1, 1}) });
+			//{ fdeep::tensor(fdeep::tensor_shape(128, 1),  1) });
 
+		uint64_t stopTime = ofGetElapsedTimeMicros();
+		cout << "Time: " << double(stopTime - startTime) / 1000.0 << " ms" << endl;
+		//std::cout << fdeep::show_tensors(result) << "\tin " << double(stopTime - startTime)/1000.0 << " ms" << endl;
+
+	}
+
+
+	/////// MULTI ////////
+
+	for (int e = 1; e < 4; e++) {
+		int nSamples = pow(10, e);
+
+		cout << "Testing predict_multi() with " << nSamples << " samples ..." << endl;
+		for (int i = 0; i < 20; i++) {
+
+			auto ten = fdeep::tensor(fdeep::tensor_shape(128, 1), { 1, -1, 1,-1,-1,-1, 1, 1,-1,-1, 1,-1, 1,-1,-1, 1,-1, 1, 1,-1,-1, 1,-1,-1,-1, 1,-1, 1,-1,-1, 1,-1, 1,-1,-1,-1,-1, 1, 1,-1,-1,-1,-1, 1, 1, 1, 1,-1, 1,-1,-1,-1, 1, 1, 1, 1, 1, 1,-1, 1, 1,-1, 1,-1, 1,-1,-1,-1,-1, 1,-1,-1,-1,-1, 1,-1, 1, 1,-1, 1,-1, 1,-1,-1,-1, 1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1, 1,-1,-1,-1, 1,-1, 1,-1,-1, 1,-1,-1, 1,-1, 1,-1, 1,-1,-1,-1, 1,-1, 1,-1, 1, 1, 1, 1,-1,-1, 1 });
+			fdeep::tensors_vec tens;
+			for (int i = 0; i < nSamples; i++) {
+				tens.push_back({ ten });
+			}
+
+			uint64_t startTime = ofGetElapsedTimeMicros();
+			const auto result = model->predict_multi(tens, true);
+			uint64_t stopTime = ofGetElapsedTimeMicros();
+			cout << "Time: " << double(stopTime - startTime) / 1000.0 << " ms" << endl;
+			//for (auto& r : result) {
+			//	std::cout << fdeep::show_tensor5s(r) << endl;
+			//}
+
+		}
+	}
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
 
-	vector<Device*>* dvs = tracker.vive.devices.getTrackers();
-	if (dvs != NULL && !dvs->empty()) {
-		// Get the first tracker
-		for (int i = 0; i < dvs->size(); i++) {
-			if ((*dvs)[i]->isActive()) {
-				ctool.update((*dvs)[i]->position);
-				break;
-			}
-		}
-	}
+
+
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-
-	ofBackground(200);
-
-	ofSetColor(0);
-	tracker.drawStatus(10, 20);
-
-	ctool.drawStatus(10, 150);
-
-	// Draw the points
-	cam.setUpAxis(ctool.getZAxis());
-	cam.begin();
-	ctool.drawDebug();
-	cam.end();
-}
-
-//--------------------------------------------------------------
-void ofApp::exit() {
-
-	tracker.exit();
-
+	ofBackground(255, 200, 200);
 }
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-
-	if (key == 'b') {
-		ctool.beginCalibrationProtocol();
-	}
-	if (key == 'l') {
-		ctool.lockTarget();
-	}
-	if (key == 'r') {
-		ctool.resetCalibrationProtocol();
-	}
-	if (key == 'g') {
-		ctool.loadCalibrationFile("raw2real.calibration");
-	}
-	if (key == 'n') {
-		vector<Device*>* dvs = tracker.vive.devices.getTrackers();
-		if (dvs != NULL && !dvs->empty()) {
-			// Get the first tracker
-			for (int i = 0; i < dvs->size(); i++) {
-				if ((*dvs)[i]->isActive()) {
-					ofLogNotice() << (*dvs)[i]->position;
-					ofLogNotice() << ctool.getMapped(glm::translate((*dvs)[i]->position));
-					break;
-				}
-			}
-		}
-	}
 
 }
 
@@ -97,7 +71,7 @@ void ofApp::keyReleased(int key){
 }
 
 //--------------------------------------------------------------
-void ofApp::mouseMoved(int x, int y){
+void ofApp::mouseMoved(int x, int y ){
 
 }
 
@@ -113,6 +87,16 @@ void ofApp::mousePressed(int x, int y, int button){
 
 //--------------------------------------------------------------
 void ofApp::mouseReleased(int x, int y, int button){
+
+}
+
+//--------------------------------------------------------------
+void ofApp::mouseEntered(int x, int y){
+
+}
+
+//--------------------------------------------------------------
+void ofApp::mouseExited(int x, int y){
 
 }
 

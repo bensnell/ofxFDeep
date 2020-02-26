@@ -1,3 +1,1 @@
-ofxOsc
-ofxPoco
-ofxXmlSettings
+../../../ExternalAddons/ofxFDeep

@@ -29,7 +29,14 @@ common:
 	# include search paths, this will be usually parsed from the file system
 	# but if the addon or addon libraries need special search paths they can be
 	# specified here separated by spaces or one per line using +=
-	# ADDON_INCLUDES =
+	ADDON_INCLUDES = lib/frugally-deep/include
+	ADDON_INCLUDES += lib/eigen-git-mirror
+	ADDON_INCLUDES += lib/FunctionalPlus/include
+	ADDON_INCLUDES += lib/json/include
+	ADDON_INCLUDES += src
+
+# 	ADDON_INCLUDES_EXCLUDE = libs/frugally-deep/test/%
+# 	ADDON_INCLUDES_EXCLUDE += libs/frugally-deep/test_package/%
 	
 	# any special flag that should be passed to the compiler when using this
 	# addon
@@ -58,7 +65,7 @@ common:
 	
 	# when parsing the file system looking for libraries exclude this for all or
 	# a specific platform
-	# ADDON_LIBS_EXCLUDE =
+# 	ADDON_LIBS_EXCLUDE = 
 	
 linux64:
 	# binary libraries, these will be usually parsed from the file system but some 

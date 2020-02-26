@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<ItemGroup>
+		<ClCompile Include="src\ofApp.cpp">
+			<Filter>src</Filter>
+		</ClCompile>
+		<ClCompile Include="src\main.cpp">
+			<Filter>src</Filter>
+		</ClCompile>
+		<ClCompile Include="src\main.cpp">
+			<Filter>src</Filter>
+		</ClCompile>
+		<ClCompile Include="src\ofApp.cpp">
+			<Filter>src</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\..\ExternalAddons\ofxFDeep\src\ofxFDeep.cpp">
+			<Filter>local_addons\ofxFDeep\src</Filter>
+		</ClCompile>
+	</ItemGroup>
+	<ItemGroup>
+		<Filter Include="src">
+			<UniqueIdentifier>{d8376475-7454-4a24-b08a-aac121d3ad6f}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="local_addons">
+			<UniqueIdentifier>{DE6745C7-E99D-D8E0-F77D-C032}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="local_addons\ofxFDeep">
+			<UniqueIdentifier>{5E4A6ADC-508B-C929-BE3D-F80D}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="local_addons\ofxFDeep\src">
+			<UniqueIdentifier>{E49CB969-8D7D-73C1-7827-B3CB}</UniqueIdentifier>
+		</Filter>
+	</ItemGroup>
+	<ItemGroup>
+		<ClInclude Include="src\ofApp.h">
+			<Filter>src</Filter>
+		</ClInclude>
+		<ClInclude Include="src\ofApp.h">
+			<Filter>src</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\..\ExternalAddons\ofxFDeep\src\ofxFDeep.h">
+			<Filter>local_addons\ofxFDeep\src</Filter>
+		</ClInclude>
+	</ItemGroup>
+	<ItemGroup>
+		<ResourceCompile Include="icon.rc" />
+	</ItemGroup>
+</Project>
