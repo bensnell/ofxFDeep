@@ -15,11 +15,11 @@
 # and the PG will write to the console the kind of error and in which line it is
 
 meta:
-	ADDON_NAME = ofxCalibrationTool
-	ADDON_DESCRIPTION = Calibrate Virtual Raw to Real Spaces
+	ADDON_NAME = ofxFDeep
+	ADDON_DESCRIPTION = Keras ML Deployments using Frugally Deep in OpenFrameworks
 	ADDON_AUTHOR = @bensnell
-	ADDON_TAGS = "calibration" "space" "tracking"
-	ADDON_URL = http://github.com/bensnell/ofxCalibrationTool
+	ADDON_TAGS = "ml" "ai" "frugally deep" "keras" "tf"
+	ADDON_URL = http://github.com/bensnell/ofxFDeep
 
 common:
 	# dependencies with other addons, a list of them separated by spaces 
